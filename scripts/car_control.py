@@ -22,15 +22,7 @@ class Controller:
         # initialize rospy
         rospy.init_node('car_controller')
 
-        '''
-        # set up publisher for steering and throttle
-        self.servo_steering = rospy.Publisher('/odroid/execution/steering',
-                                              Int32, queue_size=10)
-
-        self.servo_throttle = rospy.Publisher('/odroid/execution/throttle',
-                                              Int32, queue_size=10)
-        '''
-
+        # create controller
         self.controller = vc.ServoController()
         
         # set up subscriber for joystick data
@@ -44,21 +36,13 @@ class Controller:
     def str_callback(self, st):
         steering = st
         #rospy.loginfo("the steering is ", steering)
-        #self.servo_steering.publish(steering)
-        #controller = vc.ServoController()
         self.controller.setAngle(STEER_SERVO, steering.data)
         #controller.setAngle(0, steering)
-        #controller.setPosition(ESC_SERVO, MOTOR_NEUTRAL + 2*throttle)
 
     def thr_callback(self, thr):
         throttle = thr
         #rospy.loginfo("the throttlle is ", throttle)
-        print 'throttle is', throttle
-        #self.servo_throttle.publish(throttle)
-        #controller = vc.ServoController()
-        #self.controller.setPosition(ESC_SERVO, MOTOR_NEUTRAL + 2.0*throttle)
-        #controller.setAngle(0, steering)
-        self.controller.setPosition(ESC_SERVO, MOTOR_NEUTRAL + 2*throttle.data)
+        self.controller.setPosition(ESC_SERVO, MOTOR_NEUTRAL + throttle.data)
 
     def run(self):
         rospy.spin()
