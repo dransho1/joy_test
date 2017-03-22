@@ -42,7 +42,7 @@ class Controller:
     def thr_callback(self, thr):
         throttle = thr
         #rospy.loginfo("the throttlle is ", throttle)
-        self.controller.setPosition(ESC_SERVO, MOTOR_NEUTRAL + throttle.data)
+        self.controller.setPosition(ESC_SERVO, MOTOR_NEUTRAL + 2*throttle.data)
 
     def run(self):
         rospy.spin()
