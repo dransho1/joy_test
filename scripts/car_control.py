@@ -5,7 +5,8 @@ import rospy
 import servotest as vc
 import serial
 
-from std_msgs.msg import Float64, Int64, Int32, String
+from std_msgs.msg import Float64, Int32, Int32MultiArray
+from joy_test.msg import IntList
 
 # global variables
 MOTOR_NEUTRAL = 1500
@@ -24,26 +25,18 @@ class Controller:
 
         # create controller
         self.controller = vc.ServoController()
-        
-        # set up subscriber for joystick data
-        rospy.Subscriber('/odroid/commands/steering',
-                         Int32, self.str_callback)
 
-        rospy.Subscriber('/odroid/commands/throttle',
-                         Int32, self.thr_callback)
+        rospy.Subscriber('odroid/commands/combined',
+                         IntList, self.motor_callback)
 
-
-    def str_callback(self, st):
-        steering = st
-        #rospy.loginfo("the steering is ", steering)
-        self.controller.setAngle(STEER_SERVO, steering.data)
-        #controller.setAngle(0, steering)
-
-    def thr_callback(self, thr):
-        throttle = thr
+    def motor_callback(self, code):
+        steering = code.steer
+        throttle = code.thr
         #rospy.loginfo("the throttlle is ", throttle)
-        self.controller.setPosition(ESC_SERVO, MOTOR_NEUTRAL + 2*throttle.data)
-
+        self.controller.setAngle(STEER_SERVO, steering)
+        self.controller.setPosition(ESC_SERVO, MOTOR_NEUTRAL + 2*throttle)
+        
+        
     def run(self):
         rospy.spin()
 

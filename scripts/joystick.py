@@ -11,7 +11,8 @@ import pygame
 import time
 
 # make a message class for reporting
-from std_msgs.msg import Float64, Int32, String
+from std_msgs.msg import Float64, Int32, Int32MultiArray
+from joy_test.msg import IntList
 
 #from blobfinder.msg import MultiBlobInfo
 
@@ -21,27 +22,27 @@ from std_msgs.msg import Float64, Int32, String
 
 def joystick():
     # Publish joystick messages to a topic
-    joystick_steering = rospy.Publisher('/odroid/commands/steering',
-                                        Int32, queue_size=10)
-    joystick_throttle = rospy.Publisher('/odroid/commands/throttle',
-                                        Int32, queue_size=10)
+
+    joystick_combined = rospy.Publisher('odroid/commands/combined',
+                                        IntList,
+                                        queue_size=12)
+    
     # use float 64 as a message passing
     rospy.init_node('joystick')
 
     #################################################################
     # Main loop of program
     controller = mc.hci_init()
-
+    a = IntList()
     while not rospy.is_shutdown():
         
         steering, throttle = mc.hci_input(controller)
         steering = int(-1*steering*90 + 90)
         throttle = int(-1*90*throttle)
-        #rospy.loginfo('steering is ', steering)
-        #rospy.loginfo('throttle is ', throttle)
         #code = steering+throttle
-        joystick_steering.publish(steering)
-        joystick_throttle.publish(throttle)
+        a.steer = steering
+        a.thr = throttle
+        joystick_combined.publish(a)
         rospy.sleep(0.01) # sleep for 1/100 sec
         
 
