@@ -17,8 +17,6 @@ from joy_test.msg import IntList
 #from blobfinder.msg import MultiBlobInfo
 
 ######################################################################
-# Define a class to implement our node. This gets instantiated once
-# when the node is run (see very bottom of file)
 
 def joystick():
     # Publish joystick messages to a topic
@@ -35,12 +33,12 @@ def joystick():
     controller = mc.hci_init()
     a = IntList()
     while not rospy.is_shutdown():
-        
         steering, throttle = mc.hci_input(controller)
         steering = int(-1*steering*90 + 90)
         throttle = int(-1*90*throttle)
-        button = mc.hci_button(controller)
-        #code = steering+throttle
+        button = mc.hci_button(controller)    # killswitch is B
+
+        # write to publisher
         a.steer = steering
         a.thr = throttle
         a.button = button

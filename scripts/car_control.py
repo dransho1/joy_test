@@ -34,23 +34,18 @@ class Controller:
         steering = code.steer
         throttle = code.thr
         if button==1:
-            print "killswitch engaged shutting down script, button is:", button
+            print "killswitch engaged; shutting down script, button is:", button
             self.controller.setAngle(STEER_SERVO, 90)
             self.controller.setPosition(ESC_SERVO, MOTOR_NEUTRAL
                                         + 0*throttle)
             rospy.signal_shutdown("Killswitch")
         else:
-            print button
             self.controller.setAngle(STEER_SERVO, steering)
             self.controller.setPosition(ESC_SERVO, MOTOR_NEUTRAL + 2*throttle)
         
         
     def run(self):
         rospy.spin()
-
-    # okay great, now we can send data from one node to another. 
-    # want to now use that data to set the angle of the car
-    # and integrate this with the car's project_server.py script
 
 # main function
 if __name__ == '__main__':
