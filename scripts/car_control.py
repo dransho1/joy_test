@@ -30,11 +30,19 @@ class Controller:
                          IntList, self.motor_callback)
 
     def motor_callback(self, code):
+        button = code.button
         steering = code.steer
         throttle = code.thr
-        #rospy.loginfo("the throttlle is ", throttle)
-        self.controller.setAngle(STEER_SERVO, steering)
-        self.controller.setPosition(ESC_SERVO, MOTOR_NEUTRAL + 2*throttle)
+        if button==1:
+            print "killswitch engaged shutting down script, button is:", button
+            self.controller.setAngle(STEER_SERVO, 90)
+            self.controller.setPosition(ESC_SERVO, MOTOR_NEUTRAL
+                                        + 0*throttle)
+            rospy.signal_shutdown("Killswitch")
+        else:
+            print button
+            self.controller.setAngle(STEER_SERVO, steering)
+            self.controller.setPosition(ESC_SERVO, MOTOR_NEUTRAL + 2*throttle)
         
         
     def run(self):

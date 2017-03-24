@@ -39,9 +39,11 @@ def joystick():
         steering, throttle = mc.hci_input(controller)
         steering = int(-1*steering*90 + 90)
         throttle = int(-1*90*throttle)
+        button = mc.hci_button(controller)
         #code = steering+throttle
         a.steer = steering
         a.thr = throttle
+        a.button = button
         joystick_combined.publish(a)
         rospy.sleep(0.01) # sleep for 1/100 sec
         
