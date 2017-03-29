@@ -31,8 +31,8 @@ class Controller:
 
     def motor_callback(self, code):
         button = code.button
-        steering = code.steer
-        throttle = code.thr
+        steering = code.steer # range from 0 to 180, 90 mid
+        throttle = code.thr # range from -90 to 90, 0 mid
         if button==1:
             print "killswitch engaged; shutting down script, button is:", button
             self.controller.setAngle(STEER_SERVO, 90)
